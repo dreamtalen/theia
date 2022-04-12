@@ -124,8 +124,15 @@ manifest:
 verify:
 	@echo "===> Verifying spellings <==="
 	GO=$(GO) $(CURDIR)/hack/verify-spelling.sh
+	@echo "===> Verifying Table of Contents <==="
+	GO=$(GO) $(CURDIR)/hack/verify-toc.sh
 	@echo "===> Verifying documentation formatting for website <==="
 	$(CURDIR)/hack/verify-docs-for-website.sh
+
+.PHONY: toc
+toc:
+	@echo "===> Generating Table of Contents for Antrea docs <==="
+	GO=$(GO) $(CURDIR)/hack/update-toc.sh
 
 .PHONE: markdownlint
 markdownlint:
