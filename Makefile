@@ -112,14 +112,9 @@ clean:
 	@rm -rf .golangci-bin
 	@rm -rf .coverage
 
-.PHONY: codegen
-codegen:
-	@echo "===> Updating generated code <==="
-	$(CURDIR)/hack/update-codegen.sh
-
 .PHONY: manifest
 manifest:
-	@echo "===> Generating dev manifest for Antrea <==="
+	@echo "===> Generating dev manifest for Theia <==="
 	$(CURDIR)/hack/generate-manifest-flow-visibility.sh --mode dev > build/yamls/flow-visibility.yml
 
 .PHONY: verify
@@ -151,3 +146,8 @@ clickhouse-monitor:
 	docker tag antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION) antrea/theia-clickhouse-monitor
 	docker tag antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION) projects.registry.vmware.com/antrea/theia-clickhouse-monitor
 	docker tag antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION) projects.registry.vmware.com/antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION)
+
+.PHONY: clickhouse-monitor-plugin
+clickhouse-monitor-plugin:
+	@mkdir -p $(BINDIR)
+	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' antrea.io/theia/plugins/clickhouse-monitor
