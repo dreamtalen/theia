@@ -1,3 +1,4 @@
+
 SHELL              := /bin/bash
 # go options
 GO                 ?= go
@@ -8,10 +9,12 @@ GOPATH             ?= $$($(GO) env GOPATH)
 DOCKER_CACHE       := $(CURDIR)/.cache
 GO_VERSION         := $(shell head -n 1 build/images/deps/go-version)
 
-DOCKER_BUILD_ARGS += --build-arg GO_VERSION=$(GO_VERSION)
+DOCKER_BUILD_ARGS = --build-arg GO_VERSION=$(GO_VERSION)
 
 .PHONY: all
 all: build
+
+include versioning.mk
 
 UNAME_S := $(shell uname -s)
 
@@ -109,14 +112,9 @@ clean:
 	@rm -rf .golangci-bin
 	@rm -rf .coverage
 
-.PHONY: codegen
-codegen:
-	@echo "===> Updating generated code <==="
-	$(CURDIR)/hack/update-codegen.sh
-
 .PHONY: manifest
 manifest:
-	@echo "===> Generating dev manifest for Antrea <==="
+	@echo "===> Generating dev manifest for Theia <==="
 	$(CURDIR)/hack/generate-manifest-flow-visibility.sh --mode dev > build/yamls/flow-visibility.yml
 
 .PHONY: verify
@@ -140,3 +138,16 @@ markdownlint-fix:
 spelling-fix:
 	@echo "===> Updating incorrect spellings <==="
 	$(CURDIR)/hack/update-spelling.sh
+
+.PHONY: clickhouse-monitor
+clickhouse-monitor:
+	@echo "===> Building antrea/theia-clickhouse-monitor Docker image <==="
+	docker build --pull -t antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION) -f build/images/Dockerfile.clickhouse-monitor.ubuntu $(DOCKER_BUILD_ARGS) .
+	docker tag antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION) antrea/theia-clickhouse-monitor
+	docker tag antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION) projects.registry.vmware.com/antrea/theia-clickhouse-monitor
+	docker tag antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION) projects.registry.vmware.com/antrea/theia-clickhouse-monitor:$(DOCKER_IMG_VERSION)
+
+.PHONY: clickhouse-monitor-plugin
+clickhouse-monitor-plugin:
+	@mkdir -p $(BINDIR)
+	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' antrea.io/theia/plugins/clickhouse-monitor

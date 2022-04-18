@@ -115,10 +115,9 @@ jobs:
     # tidy check need to be run before code generation which will regenerate codes.
     - name: Check tidy
       run: make test-tidy
-    - name: Check code generation
-      run: ./ci/check-codegen.sh
-    - name: Check manifest
-      run: ./ci/check-manifest.sh
+    # Comment out for now as flow visbility manifest will be migrated in a later PR
+    # - name: Check manifest
+    #   run: ./ci/check-manifest.sh
     - name: Check copyright
       run: ./ci/check-copyright.sh
 
