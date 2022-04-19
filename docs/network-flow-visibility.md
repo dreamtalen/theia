@@ -22,7 +22,7 @@
 
 ## Overview
 
-[Antrea](design/architecture.md) is a Kubernetes network plugin that provides network
+Antrea is a Kubernetes network plugin that provides network
 connectivity and security features for Pod workloads. Considering the scale and
 dynamism of Kubernetes workloads in a cluster, Network Flow Visibility helps in
 the management and configuration of Kubernetes resources such as Network Policy,
@@ -66,7 +66,7 @@ kubectl apply -f https://raw.githubusercontent.com/antrea-io/theia/main/build/ya
 ```
 
 To deploy a released version of the Grafana Flow Collector, find a deployment manifest
-from the [list of releases](https://github.com/antrea-io/theia/releases).
+from the list of releases.
 For any given release <TAG> (v0.1.0 or later version), run the following command:
 
 ```bash
