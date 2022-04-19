@@ -117,7 +117,7 @@ clean:
 .PHONY: manifest
 manifest:
 	@echo "===> Generating dev manifest for Antrea <==="
-	$(CURDIR)/hack/generate-manifest-flow-visibility.sh --mode dev > build/yamls/flow-visibility.yml
+	$(CURDIR)/hack/generate-manifest.sh --mode dev > build/yamls/flow-visibility.yml
 
 .PHONY: verify
 verify:
