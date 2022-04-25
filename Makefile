@@ -1,6 +1,7 @@
 SHELL              := /bin/bash
 # go options
 GO                 ?= go
+LDFLAGS            :=
 GOFLAGS            :=
 BINDIR             ?= $(CURDIR)/bin
 GO_FILES           := $(shell find . -type d -name '.cache' -prune -o -type f -name '*.go' -print)
@@ -14,6 +15,11 @@ DOCKER_BUILD_ARGS += --build-arg GO_VERSION=$(GO_VERSION)
 all: build
 
 UNAME_S := $(shell uname -s)
+
+.PHONY: bin
+bin:
+	@mkdir -p $(BINDIR)
+	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' antrea.io/theia/plugins/...
 
 .PHONY: .coverage
 .coverage:
