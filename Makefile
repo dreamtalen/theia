@@ -21,10 +21,6 @@ bin:
 	@mkdir -p $(BINDIR)
 	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' antrea.io/theia/plugins/...
 
-.PHONY: .coverage
-.coverage:
-	mkdir -p $(CURDIR)/.coverage
-
 .PHONY: test-unit
 ifeq ($(UNAME_S),Linux)
 test-unit: .linux-test-unit
@@ -73,10 +69,10 @@ add-copyright:
 	@GO=$(GO) $(CURDIR)/hack/add-license.sh --add
 
 .PHONY: .linux-test-unit
-.linux-test-unit: .coverage
+.linux-test-unit:
 	@echo
 	@echo "==> Running unit tests <=="
-	$(GO) test -race -coverprofile=.coverage/coverage-unit.txt -covermode=atomic -cover antrea.io/theia/cmd/... antrea.io/theia/pkg/... antrea.io/theia/plugins/... 
+	$(GO) test -race -covermode=atomic -cover antrea.io/theia/cmd/... antrea.io/theia/pkg/... antrea.io/theia/plugins/... 
 
 .PHONY: tidy
 tidy:
@@ -113,7 +109,6 @@ clean:
 	@rm -rf $(BINDIR)
 	@rm -rf $(DOCKER_CACHE)
 	@rm -rf .golangci-bin
-	@rm -rf .coverage
 
 .PHONY: manifest
 manifest:
